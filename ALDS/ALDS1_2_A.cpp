@@ -23,7 +23,7 @@ int main() {
     int A[N];
     for(int i = 0; i < N; i++) cin >> A[i];
 
-    int count = BubbleSort();
+    int count = BubbleSort(A, N);
 
     for(int i = 0; i < N; i++) {
         if(i != 0) cout << " ";
