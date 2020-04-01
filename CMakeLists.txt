@@ -3,8 +3,6 @@ project(AOJ)
 
 set(CMAKE_CXX_STANDARD 11)
 
-add_executable(AOJ main.cpp)
-
 add_subdirectory(ALDS)
 add_subdirectory(DSL)
 add_subdirectory(GRL)
