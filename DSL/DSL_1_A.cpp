@@ -4,56 +4,51 @@
 
 using namespace std;
 
-class DisjointSet {
+class UnionFindTree {
 public:
-    vector<int> rank, p;
-    DisjointSet(int size);
-    void makeSet(int x);
+    explicit UnionFindTree(int size);
     void unite(int x, int y);
-    void link(int x, int y);
+    bool same(int x, int y);
     int findSet(int x);
+private:
+    vector<int> p, rank;
 };
 
-DisjointSet::DisjointSet(int size) {
-    rank.resize(size, 0);
-    p.resize(size, 0);
-    for(int i = 0; i < size; i++) makeSet(i);
+UnionFindTree::UnionFindTree(int size) {
+    p = vector<int>(size);
+    rank = vector<int>(size, 0);
+    for(int i=0; i<size; i++) p[i] = i;
 }
 
-void DisjointSet::makeSet(int x) {
-    p[x] = x;
-    rank[x] = 0;
-}
-
-void DisjointSet::unite(int x, int y) {
-    link(findSet(x), findSet(y));
-}
-
-void DisjointSet::link(int x, int y) {
-    if(rank[x] > rank[y]) {
-        p[y] = x;
-    } else {
-        p[x] = y;
-        if(rank[x] == rank[y]) rank[y]++;
+void UnionFindTree::unite(int x, int y) {
+    int sx = findSet(x), sy = findSet(y);
+    if(rank[sx] > rank[sy]) {
+        p[sy] = sx;
+    }
+    else {
+        p[sx] = sy;
+        if(rank[sx] == rank[sy]) rank[sy]++;
     }
 }
 
-int DisjointSet::findSet(int x) {
-    if(x != p[x]) {
-        p[x] = findSet(p[x]);
-    }
+bool UnionFindTree::same(int x, int y) {
+    return findSet(x) == findSet(y);
+}
+
+int UnionFindTree::findSet(int x) {
+    if(x != p[x]) p[x] = findSet(p[x]);
     return p[x];
 }
 
 int main() {
     int n, q, com, x, y;
     cin >> n >> q;
-    DisjointSet S(n);
+    UnionFindTree S(n);
     for(int i = 0; i < q; i++) {
         cin >> com >> x >> y;
         if(com == 0) S.unite(x, y);
         else if(com == 1) {
-            if(S.findSet(x) == S.findSet(y)) cout << 1 << endl;
+            if(S.same(x, y)) cout << 1 << endl;
             else cout << 0 << endl;
         }
     }
