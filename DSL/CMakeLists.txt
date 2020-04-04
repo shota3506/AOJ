@@ -4,4 +4,5 @@ project(DSL)
 set(CMAKE_CXX_STANDARD 11)
 
 add_executable(DSL_1_A DSL_1_A.cpp)
+add_executable(DSL_2_A DSL_2_A.cpp)
 add_executable(DSL_2_C DSL_2_C.cpp)
