@@ -29,11 +29,12 @@ int getLargestSquare() {
 }
 
 int main() {
-    int c;
     cin >> H >> W;
     for(int i = 0; i < H; i++) {
         for(int j = 0; j < W; j++) cin >> G[i][j];
     }
 
     cout << getLargestSquare() << endl;
+
+    return 0;
 }
