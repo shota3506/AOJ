@@ -1,31 +1,31 @@
 //Allocation
 #include <iostream>
+#include <climits>
 
 using namespace std;
 
-int check(int w[], int n, int p) {
-    int k = 1;
+bool check(int w[], int n, int k, int p) {
+    int cnt = 1;
     int margin = p;
-    for(int i = 0; i < n; i++) {
-        if(w[i] > p) return n + 1;
-        margin -= w[i];
-        if(margin < 0) {
+    for(int i=0; i<n; i++) {
+        if(w[i] > p) return false;
+        if(margin >= w[i]) margin -= w[i];
+        else {
+            cnt++;
             margin = p - w[i];
-            k++;
         }
     }
-    return k;
+    return cnt <= k;
 }
 
 int solve(int w[], int n, int k) {
-    long int mid, left = 0, right = 100000 * 100000;
-    while(right - left > 1) {
+    int  left = 0, right = INT_MAX, mid;
+    while(left < right) {
         mid = (left + right) / 2;
-        int x = check(w, n, mid);
-        if(k >= x) right = mid;
-        else if(k < x) left = mid;
+        if(check(w, n, k, mid)) right = mid;
+        else left = mid+1;
     }
-    return int(right);
+    return left;
 }
 
 int main() {
