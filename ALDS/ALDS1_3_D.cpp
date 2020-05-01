@@ -5,51 +5,48 @@
 
 using namespace std;
 
+struct Area {
+    int pos;
+    int number;
+    Area(int pos, int number): pos(pos), number(number) {};
+};
+
 int main() {
-    stack<int> S1;
-    stack<pair<int, int> > S2;
-    char c;
+    string s;
+    cin >> s;
 
-    int i = 0;
-    int areas = 0;
-    while(cin >> c) {
-        switch(c) {
-            case '\\':
-                S1.push(i);
-                break;
-            case '/':
-                if(S1.empty()) {
-                    i++;
-                    continue;
-                }
-                int j = S1.top();
-                S1.pop();
-                int a = i - j;
-                areas += a;
-                while(!S2.empty()) {
-                    pair<int, int> b = S2.top();
-                    if(b.first > j) {
-                        S2.pop();
-                        a += b.second;
-                    }
-                    else break;
-                }
-                S2.push(make_pair(j, a));
+    stack<int> st1;
+    stack<Area> st2;
+    int sum = 0;
+
+    for(int i=0; i<s.length(); i++) {
+        if(s[i] == '_') continue;
+        else if(s[i] == '\\') st1.push(i);
+        else {
+            if(st1.empty()) continue;
+            int j = st1.top(); st1.pop();
+            int area = (i - j);
+            sum += area;
+
+            while(!st2.empty() && st2.top().pos > j) {
+                area += st2.top().number;
+                st2.pop();
+            }
+
+            st2.push(Area(j, area));
         }
-        i++;
     }
-
-    cout << areas << endl;
 
     vector<int> ans;
-    while(!S2.empty()) {
-        pair<int, int> a = S2.top();
-        S2.pop();
-        ans.insert(ans.begin(), a.second);
+    while(!st2.empty()) {
+        ans.insert(ans.begin(), st2.top().number);
+        st2.pop();
     }
-    cout << ans.size();
-    for(int i = 0; i < ans.size(); i++) {
-        cout << " " << ans[i];
-    }
+
+    cout << sum << endl;
+    int k = ans.size();
+    cout << k;
+    if(k > 0) for (int i=0; i<k; i++) cout << " " << ans[i];
     cout << endl;
+    return 0;
 }
