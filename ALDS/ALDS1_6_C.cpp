@@ -23,11 +23,10 @@ int partition(Card A[], int p, int r) {
 }
 
 void quickSort(Card A[], int p, int r) {
-    if(p < r) {
-        int x = partition(A, p, r);
-        quickSort(A, p, x - 1);
-        quickSort(A, x + 1, r);
-    }
+    if(p >= r) return;
+    int x = partition(A, p, r);
+    quickSort(A, p, x-1);
+    quickSort(A, x+1, r);
 }
 
 void merge(Card A[], int left, int mid, int right) {
