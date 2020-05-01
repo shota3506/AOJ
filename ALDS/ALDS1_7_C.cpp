@@ -32,7 +32,7 @@ int main() {
     int n, id, left, right;
     cin >> n;
     Node N[n];
-    for(int i = 0; i < n; i++) {
+    for(int i=0; i<n; i++) {
         cin >> id >> left >> right;
         if (left != NIL) {
             N[id].left = left;
@@ -45,7 +45,11 @@ int main() {
     }
 
     int r;
-    for(int i = 0; i < n; i++) {if(N[i].parent == NIL) {r = i; break;}}
+    for(int i=0; i<n; i++) {
+        if(N[i].parent == NIL) {
+            r = i; break;
+        }
+    }
 
     cout << "Preorder" << endl;
     preOrder(N, r);

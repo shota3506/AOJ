@@ -1,38 +1,38 @@
 //Reconstruction of a Tree
 #include <iostream>
+#include <vector>
+#include <algorithm>
 
 using namespace std;
 
-int c = 1;
+int n, pos;
+vector<int> pre, in, post;
 
-void solve(int A[], int B[], int p, int q, int n) {
-    int r = 0;
-    for(int i = 0; i < n; i++) {
-        if(B[q + i] == A[p]) {r = i; break;}
-    }
-    if(r > 0) {
-        solve(A, B, p + 1, q, r);
-    }
-    if(r + 1 < n) {
-        solve(A, B, p + r + 1, q + r + 1, n - 1- r);
-    }
-    if(c != 0) c--;
-    else cout << " ";
-    cout <<  A[p];
+void solve(int l, int r) {
+    if(l >= r) return;
+    int root = pre[pos++];
+    int m = distance(in.begin(), find(in.begin(), in.end(), root));
+    solve(l, m);
+    solve(m+1, r);
+    post.push_back(root);
 }
-
-
 
 int main() {
-    int n;
     cin >> n;
 
-    int A[n], B[n];
-    for(int i = 0; i < n; i++) cin >> A[i];
-    for(int i = 0; i < n; i++) cin >> B[i];
+    int k;
+    for(int i=0; i<n; i++) {
+        cin >> k;
+        pre.push_back(k);
+    }
+    for(int i=0; i<n; i++) {
+        cin >> k;
+        in.push_back(k);
+    }
 
-    solve(A, B, 0, 0, n);
+    pos = 0;
+    solve(0, n);
 
-    cout << endl;
+    for(int i=0; i<n-1; i++) cout << post[i] << " ";
+    cout << post[n-1] << endl;
 }
-
