@@ -9,58 +9,53 @@ struct Card {
     int value;
 };
 
-void BubbleSort(Card C[], int N) {
-    for(int i = 0; i < N; i++) {
-        for(int j = N - 1; j > 0; j--) {
-            if(C[j].value < C[j-1].value) {
-                swap(C[j], C[j-1]);
-            }
+void print(Card C[], int n) {
+    for(int i=0; i<n-1; i++) cout << C[i].suit << C[i].value << " ";
+    cout << C[n-1].suit << C[n-1].value << endl;
+}
+
+void bubbleSort(Card C[], int n) {
+    for(int i=0; i<n-1; i++) {
+        for(int j=n-1; j>i; j--) {
+            if(C[j].value < C[j-1].value)
+                swap(C[j-1], C[j]);
         }
     }
 }
 
-void SelectionSort(Card C[], int N) {
-    for(int i = 0; i < N; i++) {
-        int mini = i;
-        for (int j = i; j < N; j++) {
-            if(C[mini].value > C[j].value) mini = j;
+void selectionSort(Card C[], int n) {
+    for(int i=0; i<n-1; i++) {
+        Card key = C[i];
+        int minj = i;
+        for(int j=i+1; j<n; j++) {
+            if(C[j].value < C[minj].value)
+                minj = j;
         }
-        if(i != mini) {
-            swap(C[i], C[mini]);
-        }
+        if(i != minj) swap(C[i], C[minj]);
     }
 }
 
-bool isStable(Card C1[], Card C2[], int N) {
-    bool stable = true;
-    for(int i = 0; i < N && stable; i++) {
-        if(C1[i].suit != C2[i].suit) stable = false;
-    }
-    return stable;
+bool isStable(Card C1[], Card C2[], int n) {
+    for(int i=0; i<n; i++)
+        if(C1[i].suit != C2[i].suit) return false;
+    return true;
 }
 
 int main() {
-    int N;
-    cin >> N;
-    Card C1[N], C2[N];
-    for(int i = 0; i < N; i++) cin >> C1[i].suit >> C1[i].value;
-    for(int i = 0; i < N; i++) C2[i] = C1[i];
+    int n;
+    cin >> n;
+    Card C1[n], C2[n];
+    for(int i=0; i<n; i++) cin >> C1[i].suit >> C1[i].value;
+    for(int i=0; i<n; i++) C2[i] = C1[i];
 
-    BubbleSort(C1, N);
-    SelectionSort(C2, N);
+    bubbleSort(C1, n);
+    selectionSort(C2, n);
 
-    for(int i = 0; i < N; i++) {
-        if(i != 0) cout << " ";
-        cout << C1[i].suit << C1[i].value;
-    }
-    cout << endl;
+    print(C1, n);
     cout << "Stable" << endl;
-
-    for(int i = 0; i < N; i++) {
-        if(i != 0) cout << " ";
-        cout << C2[i].suit << C2[i].value;
-    }
-    cout << endl;
-    if(isStable(C1, C2, N)) cout << "Stable" << endl;
+    print(C2, n);
+    if(isStable(C1, C2, n)) cout << "Stable" << endl;
     else cout << "Not stable" << endl;
+
+    return 0;
 }

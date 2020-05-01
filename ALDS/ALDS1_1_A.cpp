@@ -1,33 +1,35 @@
 //Insertion Sort
 #include <iostream>
-#include <algorithm>
 
 using namespace std;
 
-void trace(int A[], int N) {
-    for(int i = 0; i < N - 1; i++) cout << A[i] << " ";
-    cout << A[N-1];
-    cout << endl;
+void print(int A[], int n) {
+    for(int i=0; i<n-1; i++) cout << A[i] << " ";
+    cout << A[n-1] << endl;
 }
 
-void InsertionSort(int A[], int N) {
-    for(int i = 1; i < N; i++) {
+void insertionSort(int A[], int n) {
+    print(A, n);
+
+    for(int i=1; i<n; i++) {
         int key = A[i];
-        int j = i - 1;
+        int j = i-1;
         while(j >= 0 && A[j] > key) {
             A[j+1] = A[j];
             j--;
         }
         A[j+1] = key;
-        trace(A, N);
+        print(A, n);
     }
 }
 
 int main() {
-    int N;
-    cin >> N;
-    int A[N];
-    for(int i = 0; i < N; i++) cin >> A[i];
-    trace(A, N);
-    InsertionSort(A, N);
-}
+    int n;
+    cin >> n;
+    int A[n];
+    for(int i=0; i<n; i++) cin >> A[i];
+
+    insertionSort(A, n);
+
+    return 0;
+};

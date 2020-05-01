@@ -4,12 +4,12 @@
 
 using namespace std;
 
-int BubbleSort(int A[], int N) {
+int bubbleSort(int A[], int n) {
     int count =0;
-    for(int i = 0; i < N; i++) {
-        for(int j = N - 1; j > 0; j--) {
+    for(int i=0; i<n-1; i++) {
+        for(int j=n-1; j>i; j--) {
             if(A[j] < A[j-1]) {
-                swap(A[j], A[j-1]);
+                swap(A[j-1], A[j]);
                 count++;
             }
         }
@@ -18,17 +18,16 @@ int BubbleSort(int A[], int N) {
 }
 
 int main() {
-    int N;
-    cin >> N;
-    int A[N];
-    for(int i = 0; i < N; i++) cin >> A[i];
+    int n;
+    cin >> n;
+    int A[n];
+    for(int i=0; i<n; i++) cin >> A[i];
 
-    int count = BubbleSort(A, N);
+    int count = bubbleSort(A, n);
 
-    for(int i = 0; i < N; i++) {
-        if(i != 0) cout << " ";
-        cout << A[i];
-    }
-    cout << endl;
+    for(int i=0; i<n-1; i++) cout << A[i] << " ";
+    cout << A[n-1] << endl;
     cout << count << endl;
+
+    return 0;
 }

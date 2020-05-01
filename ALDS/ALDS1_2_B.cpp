@@ -4,33 +4,32 @@
 
 using namespace std;
 
-int SelectionSort(int A[], int N) {
+int selectionSort(int A[], int n) {
     int count = 0;
-    for(int i = 0; i < N; i++) {
-        int mini = i;
-        for (int j = i; j < N; j++) {
-            if(A[mini] > A[j]) mini = j;
+    for(int i=0; i<n-1; i++) {
+        int minj = i;
+        for(int j=i+1; j<n; j++) {
+            if(A[j] < A[minj]) minj = j;
         }
-        if(i != mini) {
-            swap(A[i], A[mini]);
+        if(i != minj) {
+            swap(A[i], A[minj]);
             count++;
         }
-    }
+    };
     return count;
 }
 
 int main() {
-    int N;
-    cin >> N;
-    int A[N];
-    for(int i = 0; i < N; i++) cin >> A[i];
+    int n;
+    cin >> n;
+    int A[n];
+    for(int i=0; i<n; i++) cin >> A[i];
 
-    int count = SelectionSort(A, N);
+    int count = selectionSort(A, n);
 
-    for(int i = 0; i < N; i++) {
-        if(i != 0) cout << " ";
-        cout << A[i];
-    }
-    cout << endl;
+    for(int i=0; i<n-1; i++) cout << A[i] << " ";
+    cout << A[n-1] << endl;
     cout << count << endl;
+
+    return 0;
 }
