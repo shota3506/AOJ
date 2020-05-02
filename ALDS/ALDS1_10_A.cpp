@@ -3,23 +3,17 @@
 
 using namespace std;
 
-const int NIL = -1;
+int fibonacci(int n) {
+    if(n == 0 || n == 1) return 1;
 
-int fibonacci(int fib[], int n) {
-    if(fib[n] != NIL) return fib[n];
-    fib[n] = fibonacci(fib, n - 1) + fibonacci(fib, n - 2);
-    return fib[n];
+    int dp[n+1];
+    dp[0] = 1; dp[1] = 1;
+    for(int i=2; i<n+1; i++) dp[i] = dp[i-1] + dp[i-2];
+    return dp[n];
 }
 
 int main() {
     int n;
     cin >> n;
-    int fib[n + 1];
-    for(int i = 0; i < n + 1; i++) {
-        fib[i] = NIL;
-    }
-    fib[0] = 1;
-    if(n > 0) fib[1] = 1;
-
-    cout << fibonacci(fib, n) << endl;
+    cout << fibonacci(n) << endl;
 }
