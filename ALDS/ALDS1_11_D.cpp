@@ -6,35 +6,29 @@ using namespace std;
 
 static const int N = 100000;
 int n, colors[N] = {};
-vector<int> G[N];
 
-void dfs_visit(int u, int c) {
-    if(colors[u] == c) return;
+void dfs(vector<vector<int>>  &G, int u, int c) {
+    if(colors[u] != -1) return;
     colors[u] = c;
-    for(int i = 0; i < G[u].size(); i++) {
-        dfs_visit(G[u][i], c);
-    }
-}
-
-void dfs() {
-    for(int i = 0; i < N; i++) colors[i] = -1;
-    for(int i = 0; i < n; i++) {
-        if(colors[i] == -1) {
-            dfs_visit(i, i);
-        }
+    for(auto v: G[u]) {
+        dfs(G, v, c);
     }
 }
 
 int main() {
     int m, s, t, q;
     cin >> n >> m;
+    vector<vector<int>> G(n);
     for(int i = 0; i < m; i++) {
         cin >> s >> t;
         G[s].push_back(t);
         G[t].push_back(s);
     }
 
-    dfs();
+    for(int i = 0; i < n; i++) colors[i] = -1;
+    for(int i = 0; i < n; i++) {
+        dfs(G, i, i);
+    }
 
     cin >> q;
     for(int i = 0; i < q; i++) {

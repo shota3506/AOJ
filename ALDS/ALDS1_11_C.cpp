@@ -1,49 +1,46 @@
 //Breadth First Search
 #include <iostream>
+#include <vector>
 #include <queue>
 
 using namespace std;
 
 static const int N = 100;
 
-int n, M[N][N];
 int d[N];
-queue<int> Q;
 
-void bfs() {
-    int u;
-    for(int i = 0; i < N; i++) d[i] = -1;
-    Q.push(0);
-    d[0] = 0;
-    while(!Q.empty()) {
-        u = Q.front();
-        for(int i = 0; i < n; i++) {
-            if(M[u][i] == 1 && d[i] == -1) {
-                Q.push(i);
-                d[i] = d[u] + 1;
-            }
+void bfs(vector<vector<int>> &G, int s) {
+    queue<int> q;
+    q.push(s);
+    d[s] = 0;
+
+    while(!q.empty()) {
+        int u = q.front();
+        q.pop();
+        for (auto v: G[u]) {
+            if(d[v] != -1) continue;
+            q.push(v);
+            d[v] = d[u] + 1;
         }
-        Q.pop();
-    }
-    for(int i = 0; i < n; i++) {
-        cout << i + 1 << " " << d[i] << endl;
     }
 }
 
 int main() {
-    int u, k, v;
+    int n;
     cin >> n;
-    for(int i = 0; i < n; i++) {
-        for(int j = 0; j < n; j++) M[i][j] = 0;
-    }
-
-    for(int i = 0; i < n; i++) {
+    int u, k, v;
+    vector<vector<int>> G(n);
+    for(int i=0; i<n; i++) {
         cin >> u >> k;
-        for(int j = 0; j < k; j++) {
+        for(int j=0; j<k; j++) {
             cin >> v;
-            M[u - 1][v - 1] = 1;
+            G[u-1].push_back(v-1);
         }
     }
+    for(int i=0; i<n; i++) d[i] = -1;
 
-    bfs();
+    bfs(G, 0);
+
+    for(int i = 0; i < n; i++) cout << i+1 << " " << d[i] << endl;
+    return 0;
 }

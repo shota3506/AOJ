@@ -1,50 +1,39 @@
 //Depth First Search
 #include <iostream>
+#include <vector>
 
 using namespace std;
 
 static const int N = 100;
 static const int WHITE = 0;
-static const int GRAY = 1;
-static const int BLACK = 2;
+static const int BLACK = 1;
 
-int n, M[N][N];
-int colors[N] = {}, d[N] = {}, f[N] = {}, tt = 1;
+int color[N] = {WHITE}, d[N] = {}, f[N] = {}, tt = 1;
 
-void dfs_visit(int u) {
-    if(colors[u] == GRAY || colors[u] == BLACK) return;
+void dfs(vector<vector<int>> &G, int u) {
+    if(color[u] == BLACK) return;
+    color[u] = BLACK;
     d[u] = tt++;
-    colors[u] = GRAY;
-    for(int i = 0; i < n; i++) {
-        if(M[u][i] == 1) dfs_visit(i);
-    }
+    for(auto v: G[u]) dfs(G, v);
     f[u] = tt++;
-    colors[u] = BLACK;
-}
-
-void dfs() {
-    for(int i = 0; i < n; i++) {
-        dfs_visit(i);
-    }
-    for(int i = 0; i < n; i++) {
-        cout << i + 1 << " " << d[i] << " " << f[i] << endl;
-    }
 }
 
 int main() {
-    int u, k, v;
+    int n;
     cin >> n;
-    for(int i = 0; i < n; i++) {
-        for(int j = 0; j < n; j++) M[i][j] = 0;
-    }
-
-    for(int i = 0; i < n; i++) {
+    int u, k, v;
+    vector<vector<int>> G(n);
+    for(int i=0; i<n; i++) {
         cin >> u >> k;
-        for(int j = 0; j < k; j++) {
+        for(int j=0; j<k; j++) {
             cin >> v;
-            M[u - 1][v - 1] = 1;
+            G[u-1].push_back(v-1);
         }
     }
 
-    dfs();
+    for(int i = 0; i < n; i++)
+        dfs(G, i);
+
+    for(int i = 0; i < n; i++) cout << i+1 << " " << d[i] << " " << f[i] << endl;
+    return 0;
 }
