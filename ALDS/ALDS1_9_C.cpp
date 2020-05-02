@@ -5,27 +5,18 @@ using namespace std;
 
 const int MAX = 2000000;
 int H = 0;
-int A[MAX + 1];
+int A[MAX+1];
 
-int parent(int i) {
-    return i / 2;
-}
-
-int left(int i) {
-    return 2 * i;
-}
-
-int right(int i) {
-    return 2 * i + 1;
-}
+int parent(int i) {return i/2;}
+int left(int i) {return 2*i;}
+int right(int i) {return 2*i+1;}
 
 void maxHeapify(int i) {
-    int l = left(i);
-    int r = right(i);
+    int l = left(i), r = right(i);
 
     int largest = i;
-    if(l < (H + 1) && A[largest] < A[l]) largest = l;
-    if(r < (H + 1) && A[largest] < A[r]) largest = r;
+    if(l <= H && A[largest] < A[l]) largest = l;
+    if(r <= H && A[largest] < A[r]) largest = r;
 
     if(largest != i) {
         swap(A[i], A[largest]);
@@ -60,11 +51,7 @@ int main() {
             cin >> k;
             insert(k);
         }
-        else if(opr == "extract") {
-            cout << extract() << endl;
-        }
-        else if(opr == "end") {
-            break;
-        }
+        else if(opr == "extract") cout << extract() << endl;
+        else if(opr == "end") break;
     }
 }
