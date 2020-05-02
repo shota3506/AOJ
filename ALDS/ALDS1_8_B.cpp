@@ -3,69 +3,63 @@
 
 using namespace std;
 
-struct Node {
+class Node {
+public:
     int key;
     Node *parent = nullptr, *left = nullptr, *right = nullptr;
-    explicit Node(int key) : key(key){}
+
+    Node(int key): key(key) {};
 };
 
 class Tree {
 public:
-    void insert(int key);
-    Node * find(int key);
     Node *root = nullptr;
+
+    void insert(int k) {
+        Node *x = root, *y = nullptr;
+        while(x != nullptr) {
+            y = x;
+            if(k <= x->key) x = x->left;
+            else x = x->right;
+        }
+
+        Node *z = new Node(k);
+        z->parent = y;
+        if(y == nullptr) root = z;
+        else if(k <= y->key) y->left = z;
+        else y->right = z;
+    };
+
+    Node* find(int k) {
+        Node *x = root;
+        while(x != nullptr && x->key != k) {
+            if(k < x->key) x = x->left;
+            else x = x->right;
+        }
+        return x;
+    };
 };
 
-void Tree::insert(int key) {
-    Node *x = root;
-    Node *y = nullptr;
-    auto *n = new Node(key);
-    while(x != nullptr) {
-        y = x;
-        if(key < x -> key) x = x -> left;
-        else x = x -> right;
-    }
-    if(y == nullptr) {
-        root = n;
-    }
-    else {
-        n -> parent = y;
-        if(key < y -> key) y -> left = n;
-        else y -> right = n;
-    }
+void inOrder(Node *u) {
+    if(u == nullptr) return;
+    inOrder(u->left);
+    cout << " " << u->key;
+    inOrder(u->right);
 }
 
-Node * Tree::find(int key) {
-    Node *x = root;
-    while(x != nullptr) {
-        if(x -> key == key) break;
-        else if(key < x -> key) x = x -> left;
-        else x = x -> right;
-    }
-    return x;
+void preOrder(Node *u) {
+    if(u == nullptr) return;
+    cout << " " << u->key;
+    preOrder(u->left);
+    preOrder(u->right);
 }
-
-void inOrder(Node *N) {
-    if(N == nullptr) return;
-    inOrder(N -> left);
-    cout << " " << (N -> key);
-    inOrder(N -> right);
-}
-
-void preOrder(Node *N) {
-    if(N == nullptr) return;
-    cout << " " << (N -> key);
-    preOrder(N -> left);
-    preOrder(N -> right);
-}
-
 
 int main() {
     Tree T;
 
     int n;
     cin >> n;
-    for(int i = 0; i < n; i++) {
+    for(int i=0; i<n; i++) {
         string opr;
         int key;
         cin >> opr;
