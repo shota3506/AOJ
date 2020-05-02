@@ -1,5 +1,6 @@
 //Minimum Spannig Tree
 #include <iostream>
+#include <vector>
 #include <climits>
 
 using namespace std;
@@ -7,50 +8,45 @@ using namespace std;
 static const int N = 100;
 static const int WHITE = 0;
 static const int BLACK = 1;
-int n, A[N][N], colors[N], d[N], p[N];
 
-int prim() {
-    int l = 0, mincost, u;
-    for(int i = 0; i < N; i++) {
+int prim(vector<vector<int>> &G, int n) {
+    int colors[n], d[n];
+    for(int i = 0; i < n; i++) {
         colors[i] = WHITE;
         d[i] = INT_MAX;
     }
+
     d[0] = 0;
-    p[0] = -1;
+    int l = 0;
     while(1) {
-        mincost = INT_MAX;
+        int u = -1;
+        int min_cost = INT_MAX;
         for(int i = 0; i < n; i++) {
-            if(colors[i] == WHITE && d[i] < mincost) {
-                mincost = d[i];
+            if(colors[i] == WHITE && d[i] < min_cost) {
+                min_cost = d[i];
                 u = i;
             }
         }
-        if(mincost == INT_MAX) break;
+        if(u == -1) break;
         colors[u] = BLACK;
-        l += mincost;
-        for(int v = 0; v < n; v++) {
-            if(colors[v] == WHITE && A[u][v] != -1) {
-                if(A[u][v] < d[v]) {
-                    d[v] = A[u][v];
-                    p[v] = u;
-                }
-            }
-        }
+        l += min_cost;
+        for(int v = 0; v < n; v++)
+            if(colors[v] == WHITE && G[u][v] != -1)
+                if(G[u][v] < d[v])
+                    d[v] = G[u][v];
     }
     return l;
 }
 
 int main() {
-    int a;
+    int n;
     cin >> n;
-    for(int i = 0; i < N; i++) {
-        for(int j = 0; j < N; j++) A[i][j] = -1;
-    }
-    for(int i = 0; i < n; i++) {
-        for(int j = 0; j < n; j++){
-            cin >> a;
-            A[i][j] = a;
-        }
-    }
-    cout << prim() << endl;
+    vector<vector<int>> G(n, vector<int>(n));
+    for(int i = 0; i < n; i++)
+        for(int j = 0; j < n; j++)
+            cin >> G[i][j];
+
+    cout << prim(G, n) << endl;
+
+    return 0;
 }
