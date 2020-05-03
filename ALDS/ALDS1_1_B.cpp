@@ -5,13 +5,13 @@
 using namespace std;
 
 int greatestCommonDivisor(int a, int b) {
-    if(a > b) swap(a, b);
-    while(b % a != 0) {
-        int t = b % a;
-        b = a;
-        a = t;
+    if(a < b) swap(a, b);
+    while(a%b != 0) {
+        int r = a%b;
+        a = b;
+        b = r;
     }
-    return a;
+    return b;
 }
 
 int main() {
