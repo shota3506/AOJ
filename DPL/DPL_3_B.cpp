@@ -1,66 +1,65 @@
-//Largest Square
+//Largest Rectangle
 #include <iostream>
-#include <stack>
 #include <algorithm>
+#include <stack>
+#include <vector>
 
 using namespace std;
 
-static const int MAX = 1400;
-
-struct Rectangle {
+class Rectangle {
 public:
-    int height, pos;
-    Rectangle(int height, int pos): height(height), pos(pos) {}
+    int pos, height;
+    Rectangle(int pos, int height): pos(pos), height(height) {}
 };
 
-int G[MAX][MAX];
-int H, W;
+int largestRectangle(int h, int w, vector<vector<int>> &G) {
+    vector<vector<int>> dp(h+1, vector<int>(w+1, 0));
 
-int getLargestRectangle() {
-    stack<Rectangle> S;
-    int dp[H][W];
-    int maxArea = 0;
-
-    for(int i=0; i<H; i++) {
-        for(int j=0; j<W; j++) {
-            dp[i][j] = (G[i][j] + 1) % 2;
-            if(i != 0 && dp[i][j] != 0) dp[i][j] += dp[i-1][j];
+    for(int i=1; i<h+1; i++) {
+        for(int j=1; j<w+1; j++) {
+            if(G[i][j] == 1) continue;
+            dp[i][j] = dp[i-1][j]+1;
         }
     }
 
-    for(int i=0; i<H; i++) {
-        for(int j=0; j<W; j++) {
-            Rectangle rect = Rectangle(dp[i][j], j);
-            if(S.empty()) S.push(rect);
-            else if(S.top().height < rect.height) S.push(rect);
-            else {
+    int s = 0;
+    stack<Rectangle> st;
+    for(int i=1; i<h+1; i++) {
+        for(int j=1; j<w+1; j++) {
+            Rectangle rect = Rectangle(j, dp[i][j]);
+            if(st.empty()) st.push(rect);
+            else if(dp[i][j] > st.top().height) st.push(rect);
+            else if(dp[i][j] < st.top().height) {
                 int pos = j;
-                while(!S.empty() && S.top().height > rect.height) {
-                    maxArea = max(maxArea, (j - S.top().pos) * S.top().height);
-                    pos = S.top().pos;
-                    S.pop();
+                while(!st.empty() && st.top().height > dp[i][j]) {
+                    s = max(s, st.top().height * (j - st.top().pos));
+                    pos = st.top().pos;
+                    st.pop();
                 }
                 rect.pos = pos;
-                S.push(rect);
+                st.push(rect);
             }
         }
-        while(!S.empty()) {
-            maxArea = max(maxArea, (W - S.top().pos) * S.top().height);
-            S.pop();
+
+        while(!st.empty()) {
+            s = max(s, st.top().height * (w + 1 - st.top().pos));
+            st.pop();
         }
     }
-    
-    return maxArea;
 
+    return s;
 }
 
 int main() {
-    cin >> H >> W;
-    for(int i = 0; i < H; i++) {
-        for(int j = 0; j < W; j++) cin >> G[i][j];
-    }
+    int h, w;
+    cin >> h >> w;
 
-    cout << getLargestRectangle() << endl;
+    vector<vector<int>> G(h+1, vector<int>(w+1, 1));
+    for(int i=1; i<h+1; i++)
+        for(int j=1; j<w+1; j++)
+            cin >> G[i][j];
+
+    cout << largestRectangle(h, w, G) << endl;
 
     return 0;
 }

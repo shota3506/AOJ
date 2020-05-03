@@ -1,40 +1,35 @@
 //Largest Square
 #include <iostream>
 #include <algorithm>
+#include <vector>
 
 using namespace std;
 
-static const int MAX = 1400;
+int largestSquare(int h, int w, vector<vector<int>> &G) {
+    vector<vector<int>> dp(h+1, vector<int>(w+1, 0));
 
-int dp[MAX][MAX], G[MAX][MAX];
-int H, W;
-
-int getLargestSquare() {
-    int maxWidth = 0;
-    for(int i = 0; i < H; i++) {
-        for(int j = 0; j < W; j++) {
-            dp[i][j] = (G[i][j] + 1) % 2;
-            maxWidth |= dp[i][j];
+    int s = 0;
+    for(int i=1; i<h+1; i++) {
+        for(int j=1; j<w+1; j++) {
+            if(G[i][j] == 1) continue;
+            dp[i][j] = min(dp[i-1][j-1]+1, min(dp[i-1][j]+1, dp[i][j-1]+1));
+            s = max(s, dp[i][j]);
         }
     }
 
-    for(int i = 1; i < H; i++) {
-        for(int j = 1; j < W; j++) {
-            if(dp[i][j] == 0) continue;
-            dp[i][j] += min(min(dp[i][j - 1], dp[i - 1][j]), dp[i - 1][j - 1]);
-            maxWidth = max(maxWidth, dp[i][j]);
-        }
-    }
-    return maxWidth * maxWidth;
+    return s*s;
 }
 
 int main() {
-    cin >> H >> W;
-    for(int i = 0; i < H; i++) {
-        for(int j = 0; j < W; j++) cin >> G[i][j];
-    }
+    int h, w;
+    cin >> h >> w;
 
-    cout << getLargestSquare() << endl;
+    vector<vector<int>> G(h+1, vector<int>(w+1, 1));
+    for(int i=1; i<h+1; i++)
+        for(int j=1; j<w+1; j++)
+            cin >> G[i][j];
+
+    cout << largestSquare(h, w, G) << endl;
 
     return 0;
 }
