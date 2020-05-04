@@ -6,50 +6,38 @@
 
 using namespace std;
 
-static const int MAX = 100000;
+vector<int> topologicalSort(int n, vector<vector<int>> &G) {
+    vector<int> indeg(n, 0);
+    for(int s=0; s<n; s++)
+        for(int t: G[s])
+            indeg[t]++;
 
-vector<int> G[MAX];
-queue<int> Q;
-list<int> out;
-bool V[MAX] = {};
-int indeg[MAX] = {};
-int N;
+    queue<int> q;
+    for(int i=0; i<n; i++)
+        if(indeg[i] == 0) q.push(i);
 
-void bfs(int u) {
-    while(!Q.empty()) Q.pop();
-    int v;
-    Q.push(u);
-    V[u] = true;
-    while(!Q.empty()) {
-        v = Q.front();
-        Q.pop();
-        out.push_back(v);
-        for(auto i : G[v]) {
-            indeg[i]--;
-            if(indeg[i] == 0) {
-                Q.push(i);
-                V[i] = true;
-            }
+    vector<int> ans;
+    while(!q.empty()) {
+        int s = q.front(); q.pop();
+        ans.push_back(s);
+        for(int t: G[s]) {
+            if(--indeg[t] == 0) q.push(t);
         }
     }
-}
 
-void topologivalSort() {
-    for(int i = 0; i < N; i++) {
-        if(indeg[i] == 0 && !V[i]) bfs(i);
-    }
+    return ans;
 }
 
 int main() {
-    int M, s, t;
-    cin >> N >> M;
-    for(int i = 0; i < M; i++) {
+    int n, m, s, t;
+    cin >> n >> m;
+    vector<vector<int>> G(n);
+    for(int i=0; i<m; i++) {
         cin >> s >> t;
         G[s].push_back(t);
-        indeg[t]++;
     }
 
-    topologivalSort();
+    vector<int> ans = topologicalSort(n, G);
 
-    for(auto itr = out.begin(); itr != out.end(); itr++) cout << *itr << endl;
+    for(auto a : ans) cout << a << endl;
 }

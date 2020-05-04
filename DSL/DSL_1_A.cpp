@@ -26,7 +26,6 @@ public:
             p[sx] = sy;
             if(rank[sx] == rank[sy]) rank[sx]++;
         }
-
     }
 
     bool same(int x, int y) {

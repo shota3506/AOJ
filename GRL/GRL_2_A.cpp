@@ -5,77 +5,66 @@
 
 using namespace std;
 
-class DisjointSet {
+
+class UnionFindTree {
+private:
+    vector<int> p, rank;
 public:
-    vector<int> rank, p;
-    DisjointSet(int size);
-    void makeSet(int x);
-    void unite(int x, int y);
-    void link(int x, int y);
-    int findSet(int x);
+    UnionFindTree(int size) {
+        p = vector<int>(size);
+        rank = vector<int>(size,0);
+        for(int i=0; i<size; i++) p[i] = i;
+    }
+
+    int findSet(int x) {
+        if(p[x] != x) p[x] = findSet(p[x]);
+        return p[x];
+    }
+
+    void unite(int x, int y) {
+        int sx = findSet(x), sy = findSet(y);
+        if(rank[sx] > rank[sy]) p[sy] = sx;
+        else {
+            p[sx] = sy;
+            if(rank[sx] == rank[sy]) rank[sx]++;
+        }
+    }
+
+    bool same(int x, int y) {
+        return findSet(x) == findSet(y);
+    }
 };
 
-DisjointSet::DisjointSet(int size) {
-    rank.resize(size, 0);
-    p.resize(size, 0);
-    for(int i = 0; i < size; i++) makeSet(i);
-}
-
-void DisjointSet::makeSet(int x) {
-    p[x] = x;
-    rank[x] = 0;
-}
-
-void DisjointSet::unite(int x, int y) {
-    link(findSet(x), findSet(y));
-}
-
-void DisjointSet::link(int x, int y) {
-    if(rank[x] > rank[y]) {
-        p[y] = x;
-    } else {
-        p[x] = y;
-        if(rank[x] == rank[y]) rank[y]++;
-    }
-}
-
-int DisjointSet::findSet(int x) {
-    if(x != p[x]) {
-        p[x] = findSet(p[x]);
-    }
-    return p[x];
-}
-
-struct Edge {
+class Edge {
 public:
     int s, t, c;
     Edge(int s, int t, int c): s(s), t(t), c(c) {}
-    bool operator < ( const Edge &e ) const {
-        return c < e.c;
-    }
+    bool operator < (const Edge e) const {return c < e.c;}
 };
 
-int kruskal(int N, vector<Edge> E) {
-    int t = 0;
+int kruskal(int n, vector<Edge> &E) {
+    UnionFindTree ut(n);
+
     sort(E.begin(), E.end());
-    DisjointSet D = DisjointSet(N);
-    for(auto itr = E.begin(); itr != E.end(); itr++) {
-        if(D.findSet(itr -> s) != D.findSet(itr -> t)) {
-            D.unite(itr -> s, itr -> t);
-            t += itr -> c;
-        }
+    int d = 0;
+    for(auto e: E) {
+        if(ut.same(e.s, e.t)) continue;
+        d += e.c;
+        ut.unite(e.s, e.t);
     }
-    return t;
+    return d;
 }
 
 int main() {
-    int N, M, s, t, c;
+    int n, m, s, t, c;
     vector<Edge> E;
-    cin >> N >> M;
-    for(int i = 0; i < M; i++) {
+    cin >> n >> m;
+    for(int i = 0; i < m; i++) {
         cin >> s >> t >> c;
         E.push_back(Edge(s, t, c));
     }
 
-    cout << kruskal(N, E) << endl;
+    cout << kruskal(n, E) << endl;
+
+    return 0;
 }

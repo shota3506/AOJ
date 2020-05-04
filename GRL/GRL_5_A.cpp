@@ -5,66 +5,50 @@
 
 using namespace std;
 
-static const int MAX = 100000;
-
 struct Edge {
 public:
     int t, w;
     Edge(int t, int w): t(t), w(w) {}
 };
 
-int N;
-vector<Edge> G[MAX];
-queue<int> Q;
-bool visited[MAX];
-int d[MAX];
+pair<int, int> bfs(int u, int n, vector<vector<Edge>> &G) {
+    int v = u, length = 0;
+    vector<bool> visited(n, false);
+    queue<pair<int, int>> q;
+    q.push(make_pair(u, 0));
 
-void bfs(int u) {
-    int v;
-    for (int i = 0; i < MAX; i++) {
-        visited[i] = false;
-        d[i] = 0;
-    }
-    Q.push(u);
-    visited[u] = true;
-    while (!Q.empty()) {
-        v = Q.front();
-        Q.pop();
-        for (auto e : G[v]) {
-            if (!visited[e.t]) {
-                Q.push(e.t);
-                visited[e.t] = true;
-                d[e.t] = d[v] + e.w;
-            }
+    while(!q.empty()) {
+        int s = q.front().first;
+        int l = q.front().second;
+        visited[s] = true;
+        if(l > length) {v = s; length = l;}
+        q.pop();
+        for(auto e: G[s]) {
+            if(visited[e.t]) continue;
+            q.push(make_pair(e.t, e.w + l));
         }
     }
+    return make_pair(v, length);
 }
 
-int diameter() {
-    int x, y, maxd = 0;
-    bfs(0);
-    for(int i = 0; i < N; i++) {
-        if(maxd < d[i]) {
-            maxd = d[i];
-            x = i;
-        }
-    }
-    bfs(x);
-    maxd = 0;
-    for(int i = 0; i < N; i++) {
-        if(maxd < d[i]) maxd = d[i];
-    }
-    return maxd;
+int diameter(int n, vector<vector<Edge>> &G) {
+    pair<int, int> p = bfs(0, n ,G);
+    int x = p.first;
+    pair<int, int> q = bfs(x, n ,G);
+    return q.second;
 }
 
 int main() {
-    int s, t, w;
-    cin >> N;
-    for(int i = 1; i < N; i++) {
+    int n, s, t, w;
+    cin >> n;
+    vector<vector<Edge>> G(n);
+    for(int i = 1; i < n; i++) {
         cin >> s >> t >> w;
         G[s].push_back(Edge(t, w));
         G[t].push_back(Edge(s, w));
     }
 
-    cout << diameter() << endl;
+    cout << diameter(n, G) << endl;
+
+    return 0;
 }
